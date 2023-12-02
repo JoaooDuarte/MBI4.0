@@ -1,0 +1,62 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.5/dist/mindar-image.prod.js"></script>
+<script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.5/dist/mindar-image-aframe.prod.js"></script>
+</head>
+<body>
+<a-scene mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/JoaooDuarte/MBI4.0/targets%20(1).mind;">
+<a-camera look-controls></a-camera>
+<a-entity mindar-image-target="targetIndex: 0" position="0 0 -1">
+<a-plane color="#888" opacity="0.5" position="0 0 0" height="0.5" width="1" rotation="0 0 0">
+<a-text value="SENAI - CENTRO 4.0" position="-0.2 0.2 0" scale="0.2 0.2 0.2"></a-text>
+<a-box color="rgba(64, 64, 255, 0.2)" depth="0.005" height="0" width="0.05" position="-0.3 0.2 0" id="id_barra_pecasboas"></a-box>
+<a-text value="PecasBoas" position="-0.20 -0.22 0" scale="0.1 0.1 0.1"></a-text>
+<a-text value="000" position="-0.20 -0.25 " scale="0.1 0.1 0.1" id="qtde_pecasboas"></a-text>
+<a-box color="rgba(255, 64, 64, 0.2)" depth="0.005" height="0" width="0.05" position="0 0.2 0" id="id_barra_pecasruins"></a-box>
+<a-text value="PecasRuins" position="0.1 -0.22 0" scale="0.1 0.1 0.1"></a-text>
+<a-text value="000" position="0.1 -0.25 0" scale="0.1 0.1 0.1" id="qtde_pecasruins"></a-text>
+<a-box color="#aaa" depth="0.005" height="0.01" width="0.8" position="0 -0.2 0.01" id="linhaBasse"></a-box>
+</a-plane>
+</a-entity>
+</a-scene>
+<script>
+const escalaMax=0.35
+const barra_pecasboas=document.getElementById("id_barra_pecasboas")
+const barra_pecasruins=document.getElementById("id_barra_pecasruins")
+const qtde_pecasboas=document.getElementById("qtde_pecasboas")
+const qtde_pecasruins=document.getElementById("qtde_pecasruins")
+let posYbarra_pecasboas=posYbarra_pecasruins=0
+let valBarra_pecasboas=valBarra_pecasruins=0
+let valPosBarra_pecasboas=valPosBarra_pecasruins="0 0 0"
+let posBase=-0.2
+let pecasboas=0
+let pecasruins=0
+let pecastotais=0
+const controle=()=>{
+const endpoint="http://127.0.0.1:3000/"
+fetch(endpoint)
+.then(request => request.json())
+.then(dados=>{
+pecasboas=(dados.pecasboas)
+pecasruins=(dados.pecasruins)
+pecastotais=pecasboas+pecasruins
+valBarra_pecasboas=(pecasboas-0)*(escalaMax-0)/(pecastotais-0)+0
+valBarra_pecasruins=(pecasruins-0)*(escalaMax-0)/(pecastotais-0)+0
+posYbarra_pecasboas=(valBarra_pecasboas/2)+posBase
+valPosBarra_pecasboas="-0.15 "+posYbarra_pecasboas+" 0.005"
+posYbarra_pecasruins=(valBarra_pecasruins/2)+posBase
+valPosBarra_pecasruins="0.15 "+posYbarra_pecasruins+" 0.005"
+barra_pecasboas.setAttribute("height",valBarra_pecasboas)
+barra_pecasboas.setAttribute("position",valPosBarra_pecasboas)
+qtde_pecasboas.setAttribute("value",pecasboas)
+barra_pecasruins.setAttribute("height",valBarra_pecasruins)
+barra_pecasruins.setAttribute("position",valPosBarra_pecasruins)
+qtde_pecasruins.setAttribute("value",pecasruins)
+})
+};
+const int=setInterval(controle,3000)
+</script>
+</body>
+</html>
